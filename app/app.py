@@ -1,8 +1,8 @@
 import gradio as gr
 from gradio import interface
-from summarizer import summarize_text
-from utils import fetch_website_contents
-from utils import extract_text
+from universal_content_summarizer.app.summarizer import summarize_text
+from universal_content_summarizer.app.utils import fetch_website_contents
+from universal_content_summarizer.app.utils import extract_text
 def run_summary(input_type, user_input, pdf_file, style, depth, audience):
     if input_type== "URL":
         content= fetch_website_contents(user_input)

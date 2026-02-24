@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Universal content summarizer</title>
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    </head>
+    <body>
+        <h2>Universal content summarizer</h2>
+        <select id="inputType">
+            <option value="text">Text</option>
+            <option value="url">url</option>
+            <option value="pdf">PDF</option>
+        </select>
+        <br>
+        <br>
+        <textarea id="textInput" rows="10" cols="60"></textarea>
+        <br><br>
+        <input type="file" id="fileInput" />
+        <br><br>
+        <select id="style">
+        <option value="paragraph">Paragraph</option>
+        <option value="bullet">Bullet</option>
+        </select>
+        <select id="depth">
+        <option value="short">Short</option>
+        <option value="detailed">Detailed</option>
+        </select>
+        <select id="audience">
+        <option value="general">General</option>
+        <option value="technical">technical</option>
+        <option value="beginner">Beginner</option>
+        </select>
+        <button onclick="submitForm()">Summarize</button>
+        <pre id="output"></pre>  
+
+        <script>
+            async function submitForm() {
+                const formData= new FormData();
+                const inputType= document.getElementById("inputType").value;
+                formData.append("input_type", inputType);
+
+                if (inputType=="text"){
+                    formData.append("text", document.getElementById("textInput").value);
+                }
+                else if (inputType=="url") {
+                    formData.append("url", document.getElementById("textInput").value);    
+                }
+                else if (inputType=="pdf") {
+                    formData.append("file", document.getElementById("fileInput").files[0]);   
+                }
+                formData.append("style", document.getElementById("style").value);
+                formData.append("depth", document.getElementById("depth").value);
+                formData.append("audience", document.getElementById("audience").value);
+                const response= await fetch("http://127.0.0.1:8000/summarize",{
+                    method:"POST",
+                    body: formData
+                });
+                const data= await response.json();
+                output.innerHTML = marked.parse(data.summary);
+            }
+        </script>
+    </body>
+</html>
